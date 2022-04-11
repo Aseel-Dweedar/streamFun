@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -237,21 +238,21 @@ public class StatesAndCapitals
         // A41. Submit all state and capital names together, with each state name followed by its capital name
         // Use flatMap() and Stream.of() (for the pairs)
 
-        List<String> allStateAndCapitalNames = null;
+        List<String> allStateAndCapitalNames = states.stream().map(state -> state.getStateName()+ ", " + state.getCapital().getCapitalName()).collect(toList());
 
         testResults.put("A41", StatesAndCapitalsCheck.adv41(allStateAndCapitalNames));
 
         // A42. Submit all state and capital names together, but group each state and capital pair into a list
         // Use map(), two instances of collect(toList()), and Stream.of() (for the pairs)
 
-        List<List<String>> allStateAndCapitalNamesTogetherAsLists = null;
+        List<List<String>> allStateAndCapitalNamesTogetherAsLists = states.stream().map(state -> new ArrayList<String>(Collections.singleton(state.getStateName() + ", " + state.getCapital().getCapitalName()))).collect(toList());
 
         testResults.put("A42", StatesAndCapitalsCheck.adv42(allStateAndCapitalNamesTogetherAsLists));
 
         // A43. Submit all state and capital names together, but group each state as a key, and each capital as a value, in a Map
         // Use collect(toMap())
 
-        Map<String, String> stateNameToCapitalNamesMap = null;
+        Map<String, String> stateNameToCapitalNamesMap = states.stream().collect(Collectors.toMap(StateInfo::getStateName, state -> state.getCapital().getCapitalName()));
 
         testResults.put("A43", StatesAndCapitalsCheck.adv43(stateNameToCapitalNamesMap));
 
@@ -261,7 +262,7 @@ public class StatesAndCapitals
         // E1. Submit a list of all the denonyms that do not contain the state's name in them
         // Use flatMap(), filter()
 
-        List<String> allDenonymsThatDoNotContainStateName = null;
+        List<String> allDenonymsThatDoNotContainStateName = states.stream().flatMap( state -> state.getDenonyms().stream().filter( denonym -> !denonym.contains(state.getStateName())) ).collect(toList());
 
         testResults.put("E1", StatesAndCapitalsCheck.expert1(allDenonymsThatDoNotContainStateName));
 
@@ -269,7 +270,10 @@ public class StatesAndCapitals
         // Use filter(), flatMap(), and count()
         // PS: Don't cheat by using an intermediate data structure for Honolulu!
 
-        Long totalNumberOfHonoluluSisterCitiesStartingWithCa = null;
+        Long totalNumberOfHonoluluSisterCitiesStartingWithCa = states.stream().
+                filter(state -> state.getCapital().getCapitalName().equals("Honolulu"))
+                .flatMap(state -> state.getCapital().getSisterCities().stream().filter(city -> city.startsWith("Ca")))
+                .count();
 
         testResults.put("E2", StatesAndCapitalsCheck.expert2(totalNumberOfHonoluluSisterCitiesStartingWithCa));
 
@@ -278,7 +282,14 @@ public class StatesAndCapitals
         // Use Arrays.stream(), flatMap(), map(), and collect(toList())
         // If you need a hint, look inside the E3 answer checking function
 
-        List<String> countriesOfTheWorldWithNoUSCapitalSisterCities = null;
+        List<String> countriesOfTheWorldWithNoUSCapitalSisterCities = Arrays.stream(allCountriesList)
+                .filter( country ->  states.stream().filter(state -> state.getCapital().getCapitalName().equals("Washington"))
+                        .map( state -> state.getCapital().getSisterCities() ).collect(toList()).contains("a")
+                ).collect(toList());
+
+        System.out.println("ffffffffffffffffffffffffffffffffffffffffffffff");
+        System.out.println(countriesOfTheWorldWithNoUSCapitalSisterCities.size());
+        System.out.println("ffffffffffffffffffffffffffffffffffffffffffffff");
 
         testResults.put("E3", StatesAndCapitalsCheck.expert3(countriesOfTheWorldWithNoUSCapitalSisterCities));
 
@@ -286,6 +297,8 @@ public class StatesAndCapitals
         // Example (wrong) answer: "Alaska Hawaii"
         // Abandon hope, all ye who enter here; if you insist on trying, you should think about using filter(), map(), max(), orElse(), and some abuse of AbstractMap.SimpleEntry
 
+
+        // Washington
         String statesWithLargestDifferenceBetweenHighestElevations = null;
 
         testResults.put("E4", StatesAndCapitalsCheck.expert4(statesWithLargestDifferenceBetweenHighestElevations));
