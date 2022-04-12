@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="statesAndCapitals.StatesAndCapitalsTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2022-04-10T20:08:49" hostname="aseel-HP-250-G7-Notebook-PC" time="0.093">
+<testsuite name="statesAndCapitals.StatesAndCapitalsTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2022-04-12T20:42:02" hostname="aseel-HP-250-G7-Notebook-PC" time="0.122">
   <properties/>
-  <testcase name="Test_states_and_capitals()" classname="statesAndCapitals.StatesAndCapitalsTest" time="0.093"/>
-  <system-out><![CDATA[{B1=true, B2=true, B3=true, B4=true, B5=true, I1=true, I2=true, I3=true, I4=true, I5=true, A11=true, A12=true, A13=true, A14=true, A21=true, A22=true, A23=true, A24=true, A25=true, A31=true, A32=true, A33=true, A41=false, A42=false, A43=false, E1=false, E2=false, E3=false, E4=false, E5=false}
+  <testcase name="Test_states_and_capitals()" classname="statesAndCapitals.StatesAndCapitalsTest" time="0.122"/>
+  <system-out><![CDATA[kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk
+[first, aseel, baba, ddddddddddddddd]
+kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk
+{B1=true, B2=true, B3=true, B4=true, B5=true, I1=true, I2=true, I3=true, I4=true, I5=true, A11=true, A12=true, A13=true, A14=true, A21=true, A22=true, A23=true, A24=true, A25=true, A31=true, A32=true, A33=true, A41=true, A42=true, A43=true, E1=true, E2=true, E3=false, E4=false, E5=false}
 ]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -282,14 +283,15 @@ public class StatesAndCapitals
         // Use Arrays.stream(), flatMap(), map(), and collect(toList())
         // If you need a hint, look inside the E3 answer checking function
 
-        List<String> countriesOfTheWorldWithNoUSCapitalSisterCities = Arrays.stream(allCountriesList)
-                .filter( country ->  states.stream().filter(state -> state.getCapital().getCapitalName().equals("Washington"))
-                        .map( state -> state.getCapital().getSisterCities() ).collect(toList()).contains("a")
-                ).collect(toList());
+        String sisterCitiesOfUSCapital = states.stream().flatMap( state -> state.getCapital().getSisterCities().stream() ).collect(joining());
 
-        System.out.println("ffffffffffffffffffffffffffffffffffffffffffffff");
-        System.out.println(countriesOfTheWorldWithNoUSCapitalSisterCities.size());
-        System.out.println("ffffffffffffffffffffffffffffffffffffffffffffff");
+        List<String> countriesOfTheWorldWithNoUSCapitalSisterCities = Arrays.stream(allCountriesList)
+                .filter(country -> !sisterCitiesOfUSCapital.contains(country)).collect(toList());
+
+//        System.out.println("=====================================================================================================");
+//        System.out.println(countriesOfTheWorldWithNoUSCapitalSisterCities);
+//        System.out.println("[Afghanistan, Åland Islands, Albania, Algeria, American Samoa, Andorra, Angola, Anguilla, Antarctica, Antigua and Barbuda, Armenia, Aruba, Austria, Bahrain, Bangladesh, Barbados, Belarus, Belize, Bermuda, Bhutan, Bolivia (Plurinational State of), Bonaire and Sint Eustatius and Saba, Bosnia and Herzegovina, Botswana, Bouvet Island, British Indian Ocean Territory, United States Minor Outlying Islands, Virgin Islands (British), Virgin Islands (U.S.), Brunei Darussalam, Burkina Faso, Burundi, Cambodia, Cameroon, Cabo Verde, Cayman Islands, Central African Republic, Chad, Chile, Christmas Island, Cocos (Keeling) Islands, Comoros, Congo, Congo (Democratic Republic of the), Cook Islands, Costa Rica, Croatia, Curaçao, Cyprus, Dominica, Ecuador, Equatorial Guinea, Eritrea, Falkland Islands (Malvinas), Faroe Islands, Fiji, Finland, French Guiana, French Polynesia, French Southern Territories, Gabon, Gibraltar, Greenland, Grenada, Guadeloupe, Guam, Guernsey, Guinea, Guinea-Bissau, Guyana, Heard Island and McDonald Islands, Holy See, Honduras, Hong Kong, Hungary, Iceland, Indonesia, Côte d'Ivoire, Iran (Islamic Republic of), Iraq, Isle of Man, Jordan, Kazakhstan, Kiribati, Kuwait, Kyrgyzstan, Lao People's Democratic Republic, Latvia, Lebanon, Liberia, Libya, Liechtenstein, Luxembourg, Macao, Macedonia (the former Yugoslav Republic of), Madagascar, Malawi, Maldives, Malta, Martinique, Mauritania, Mauritius, Mayotte, Micronesia (Federated States of), Moldova (Republic of), Monaco, Montenegro, Montserrat, Myanmar, Nauru, Nepal, New Caledonia, Niger, Niue, Norfolk Island, Korea (Democratic People's Republic of), Northern Mariana Islands, Norway, Oman, Pakistan, Palau, Palestine (State of), Panama, Papua New Guinea, Paraguay, Pitcairn, Poland, Qatar, Republic of Kosovo, Réunion, Russian Federation, Saint Barthélemy, Saint Helena and Ascension and Tristan da Cunha, Saint Kitts and Nevis, Saint Lucia, Saint Martin (French part), Saint Pierre and Miquelon, Saint Vincent and the Grenadines, Samoa, San Marino, Sao Tome and Principe, Saudi Arabia, Serbia, Seychelles, Sierra Leone, Singapore, Sint Maarten (Dutch part), Solomon Islands, South Georgia and the South Sandwich Islands, Korea (Republic of), South Sudan, Sri Lanka, Sudan, Suriname, Svalbard and Jan Mayen, Swaziland, Syrian Arab Republic, Tanzania (United Republic of), Thailand, Timor-Leste, Togo, Tokelau, Tonga, Turkmenistan, Turks and Caicos Islands, Tuvalu, Uganda, United Arab Emirates, United Kingdom of Great Britain and Northern Ireland, United States of America, Uruguay, Vanuatu, Venezuela (Bolivarian Republic of), Viet Nam, Wallis and Futuna, Western Sahara, Yemen, Zimbabwe]");
+//        System.out.println("=====================================================================================================");
 
         testResults.put("E3", StatesAndCapitalsCheck.expert3(countriesOfTheWorldWithNoUSCapitalSisterCities));
 
@@ -298,7 +300,45 @@ public class StatesAndCapitals
         // Abandon hope, all ye who enter here; if you insist on trying, you should think about using filter(), map(), max(), orElse(), and some abuse of AbstractMap.SimpleEntry
 
 
-        // Washington
+//        Map<String, String> stateNameToCapitalNamesMap = states.stream().collect(Collectors.toMap(StateInfo::getStateName, state -> state.getCapital().getCapitalName()));
+
+        // map inner map <String, int>
+
+//        List<String>
+//        Map<String,Integer> innerMap = states.stream().map(StateInfo::getNeighboringStates).
+//        Map<String,Integer> innerMap = states.stream().collect(Collectors.toMap(stateInfo -> stateInfo.getStateName()) , states-> )
+
+        // state.getHighestElevationInFeet() -  states.stream().filter(all -> all.getStateName() == neighbor )
+
+//        List<String> testList = new ArrayList<>();
+//        testList.add("first");
+//        testList.add("aseel");
+//        testList.add("baba");
+//        testList.add("ddddddddddddddd");
+
+//        Map<String,Integer> toTest = testList.stream().collect(toMap(  Function.identity() , 5));
+//        List<String> toTest = testList.stream().map(String::toString).collect(toList());
+
+//        System.out.println("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk");
+//        System.out.println(toTest);
+//        System.out.println("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk");
+
+//        Map<String,Map<String,Integer>> innerMap = states.stream().collect(Collectors.toMap(StateInfo::getStateName, state -> state.getNeighboringStates().stream().collect(toMap(String::toString , 5 )) );
+
+//        Map<String,Map<String,Integer>> innerMap = states.stream().collect(Collectors.toMap(StateInfo::getStateName, state ->  Stream.of(state.getNeighboringStates()).collect(toMap(Function.identity(), String::length))));
+
+//        // find max highest
+//        String highestCity = states.stream().max(Comparator.comparing(StateInfo::getHighestElevationInFeet)).get().getStateName();
+//
+//        // find min lowest
+//        String lowestCity = states.stream().min(Comparator.comparing(StateInfo::getHighestElevationInFeet)).get().getStateName();
+//
+//        // get the city
+//        System.out.println("========================================================================");
+//        System.out.println("H " + "-----> " + highestCity);
+//        System.out.println("L " + "-----> " + lowestCity);
+//        System.out.println("========================================================================");
+
         String statesWithLargestDifferenceBetweenHighestElevations = null;
 
         testResults.put("E4", StatesAndCapitalsCheck.expert4(statesWithLargestDifferenceBetweenHighestElevations));
