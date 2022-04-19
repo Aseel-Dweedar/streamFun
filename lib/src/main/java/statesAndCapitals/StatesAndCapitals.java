@@ -17,35 +17,35 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import static java.lang.Integer.MAX_VALUE;
 import static java.util.stream.Collectors.*;
 
-public class StatesAndCapitals
-{
+public class StatesAndCapitals {
 
     String statesAndCapitalsFilePath = "./src/main/resources/us_states_and_capitals.json";
 
-    public ArrayList<StateInfo> readStatesAndCapitals() throws IOException
-    {
+    public ArrayList<StateInfo> readStatesAndCapitals() throws IOException {
         File statesAndCapitalsFile = new File(statesAndCapitalsFilePath);
         ArrayList<StateInfo> states;
 
-        try(FileReader statesAndCapitalsFileReader = new FileReader(statesAndCapitalsFile))
-        {
+        try (FileReader statesAndCapitalsFileReader = new FileReader(statesAndCapitalsFile)) {
             final Gson gson = new GsonBuilder().registerTypeAdapter(LocalDate.class, new JsonDeserializer<LocalDate>() {
                 @Override
                 public LocalDate deserialize(JsonElement json, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
                     return LocalDate.parse(json.getAsJsonPrimitive().getAsString());
-                };
+                }
+
+                ;
             }).create();
 
-            states = gson.fromJson(statesAndCapitalsFileReader, new TypeToken<List<StateInfo>>() {}.getType());
+            states = gson.fromJson(statesAndCapitalsFileReader, new TypeToken<List<StateInfo>>() {
+            }.getType());
         }
 
         return states;
     }
 
-    public void testStatesAndCapitals() throws IOException
-    {
+    public void testStatesAndCapitals() throws IOException {
         ArrayList<StateInfo> states = readStatesAndCapitals();
 
         Map<String, Boolean> testResults = new LinkedHashMap<>();
@@ -74,7 +74,7 @@ public class StatesAndCapitals
         // B2. Submit the last five states
         // Use skip()
 
-        List<StateInfo> lastFiveStates = states.stream().skip(states.size()-5).collect(toList());
+        List<StateInfo> lastFiveStates = states.stream().skip(states.size() - 5).collect(toList());
 
         testResults.put("B2", StatesAndCapitalsCheck.basic2(lastFiveStates));
 
@@ -159,14 +159,14 @@ public class StatesAndCapitals
         // A13. Submit how many states are in each time zone (or group of time zones)
         // Use collect(groupingBy()) and counting()
 
-        Map<String, Long> numberOfStatesByTimeZone = states.stream().collect(groupingBy(state -> state.getTimeZones().toString() , counting()));
+        Map<String, Long> numberOfStatesByTimeZone = states.stream().collect(groupingBy(state -> state.getTimeZones().toString(), counting()));
 
         testResults.put("A13", StatesAndCapitalsCheck.adv13(numberOfStatesByTimeZone));
 
         // A14. Submit how many state capitals are in each time zone
         // Use collect(groupingBy()) and counting()
 
-        Map<String, Long> numberOfStateCapitalsByTimeZone = states.stream().collect(groupingBy(state -> state.getCapital().getTimeZone() , counting()));
+        Map<String, Long> numberOfStateCapitalsByTimeZone = states.stream().collect(groupingBy(state -> state.getCapital().getTimeZone(), counting()));
 
         testResults.put("A14", StatesAndCapitalsCheck.adv14(numberOfStateCapitalsByTimeZone));
 
@@ -197,7 +197,7 @@ public class StatesAndCapitals
         // Use distinct(), map(), and filter()
 
 
-        List<String> allDistinctStateBirdsMinusMockingbirds = states.stream().map(StateInfo::getStateBird).distinct().filter(bird -> !bird.contains("mockingbird") ).collect(toList());
+        List<String> allDistinctStateBirdsMinusMockingbirds = states.stream().map(StateInfo::getStateBird).distinct().filter(bird -> !bird.contains("mockingbird")).collect(toList());
 
         testResults.put("A24", StatesAndCapitalsCheck.adv24(allDistinctStateBirdsMinusMockingbirds));
 
@@ -230,7 +230,7 @@ public class StatesAndCapitals
         // A33. Submit the state with the least distance between its highest and lowest points
         // Use min(), comparing(), and orElse()
 
-        StateInfo stateWithLeastDistanceBetweenHighAndLowPoints = states.stream().min(Comparator.comparing(stateInfo -> stateInfo.getHighestElevationInFeet() - stateInfo.getLowestElevationInFeet() )).get();
+        StateInfo stateWithLeastDistanceBetweenHighAndLowPoints = states.stream().min(Comparator.comparing(stateInfo -> stateInfo.getHighestElevationInFeet() - stateInfo.getLowestElevationInFeet())).get();
 
         testResults.put("A33", StatesAndCapitalsCheck.adv33(stateWithLeastDistanceBetweenHighAndLowPoints));
 
@@ -239,7 +239,7 @@ public class StatesAndCapitals
         // A41. Submit all state and capital names together, with each state name followed by its capital name
         // Use flatMap() and Stream.of() (for the pairs)
 
-        List<String> allStateAndCapitalNames = states.stream().map(state -> state.getStateName()+ ", " + state.getCapital().getCapitalName()).collect(toList());
+        List<String> allStateAndCapitalNames = states.stream().map(state -> state.getStateName() + ", " + state.getCapital().getCapitalName()).collect(toList());
 
         testResults.put("A41", StatesAndCapitalsCheck.adv41(allStateAndCapitalNames));
 
@@ -263,7 +263,7 @@ public class StatesAndCapitals
         // E1. Submit a list of all the denonyms that do not contain the state's name in them
         // Use flatMap(), filter()
 
-        List<String> allDenonymsThatDoNotContainStateName = states.stream().flatMap( state -> state.getDenonyms().stream().filter( denonym -> !denonym.contains(state.getStateName())) ).collect(toList());
+        List<String> allDenonymsThatDoNotContainStateName = states.stream().flatMap(state -> state.getDenonyms().stream().filter(denonym -> !denonym.contains(state.getStateName()))).collect(toList());
 
         testResults.put("E1", StatesAndCapitalsCheck.expert1(allDenonymsThatDoNotContainStateName));
 
@@ -283,7 +283,7 @@ public class StatesAndCapitals
         // Use Arrays.stream(), flatMap(), map(), and collect(toList())
         // If you need a hint, look inside the E3 answer checking function
 
-        String sisterCitiesOfUSCapital = states.stream().flatMap( state -> state.getCapital().getSisterCities().stream() ).collect(joining());
+        String sisterCitiesOfUSCapital = states.stream().flatMap(state -> state.getCapital().getSisterCities().stream()).collect(joining());
 
         List<String> countriesOfTheWorldWithNoUSCapitalSisterCities = Arrays.stream(allCountriesList)
                 .filter(country -> !sisterCitiesOfUSCapital.contains(country)).collect(toList());
@@ -299,45 +299,47 @@ public class StatesAndCapitals
         // Example (wrong) answer: "Alaska Hawaii"
         // Abandon hope, all ye who enter here; if you insist on trying, you should think about using filter(), map(), max(), orElse(), and some abuse of AbstractMap.SimpleEntry
 
-
-//        Map<String, String> stateNameToCapitalNamesMap = states.stream().collect(Collectors.toMap(StateInfo::getStateName, state -> state.getCapital().getCapitalName()));
-
-        // map inner map <String, int>
-
-//        List<String>
-//        Map<String,Integer> innerMap = states.stream().map(StateInfo::getNeighboringStates).
-//        Map<String,Integer> innerMap = states.stream().collect(Collectors.toMap(stateInfo -> stateInfo.getStateName()) , states-> )
-
-        // state.getHighestElevationInFeet() -  states.stream().filter(all -> all.getStateName() == neighbor )
-
-//        List<String> testList = new ArrayList<>();
-//        testList.add("first");
-//        testList.add("aseel");
-//        testList.add("baba");
-//        testList.add("ddddddddddddddd");
-
-//        Map<String,Integer> toTest = testList.stream().collect(toMap(  Function.identity() , 5));
-//        List<String> toTest = testList.stream().map(String::toString).collect(toList());
-
-//        System.out.println("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk");
-//        System.out.println(toTest);
-//        System.out.println("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk");
-
-//        Map<String,Map<String,Integer>> innerMap = states.stream().collect(Collectors.toMap(StateInfo::getStateName, state -> state.getNeighboringStates().stream().collect(toMap(String::toString , 5 )) );
-
-//        Map<String,Map<String,Integer>> innerMap = states.stream().collect(Collectors.toMap(StateInfo::getStateName, state ->  Stream.of(state.getNeighboringStates()).collect(toMap(Function.identity(), String::length))));
-
-//        // find max highest
-//        String highestCity = states.stream().max(Comparator.comparing(StateInfo::getHighestElevationInFeet)).get().getStateName();
+//        Map<String, Map<String, Integer>> innerMap = states.stream().collect(Collectors.toMap(state -> state.getStateName() + " " + state.getHighestElevationInFeet(),
+//                state -> state.getNeighboringStates().stream()
+//                        .collect(toMap(
+//                                neighborName -> neighborName , neighborName ->
+//                                {
+//                                    Optional<StateInfo> test = states.stream().filter(
+//                                            d -> Objects.equals(d.getStateName(), neighborName)
+//                                    ).findFirst();
+//                                    if (test.isEmpty()) {
+//                                        return MAX_VALUE;
+//                                    } else {
+//                                        return test.get().getHighestElevationInFeet();
+//                                    }
+//                                }
 //
-//        // find min lowest
-//        String lowestCity = states.stream().min(Comparator.comparing(StateInfo::getHighestElevationInFeet)).get().getStateName();
-//
-//        // get the city
-//        System.out.println("========================================================================");
-//        System.out.println("H " + "-----> " + highestCity);
-//        System.out.println("L " + "-----> " + lowestCity);
-//        System.out.println("========================================================================");
+//                        )
+//                        )
+//        ));
+
+//        Map<String, List<String>> innerMap = states.stream().collect(Collectors.toMap(state -> state.getStateName() + "-" + state.getHighestElevationInFeet(),
+//                        state -> state.getNeighboringStates().stream().map(
+//                                        neighborName ->
+//                                        {
+//                                            Optional<StateInfo> test = states.stream().filter(
+//                                                    d -> Objects.equals(d.getStateName(), neighborName)
+//                                            ).findFirst();
+//                                            if (test.isEmpty()) {
+//                                                return "" + MAX_VALUE;
+//                                            } else {
+//                                                return test.get().getStateName() + "-" +  test.get().getHighestElevationInFeet();
+//                                            }
+//                                        }
+//                                ).collect(toList())
+//                )
+//        );
+
+
+        System.out.println("================================================================================================");
+//        System.out.println(innerMap);
+        System.out.println("================================================================================================");
+
 
         String statesWithLargestDifferenceBetweenHighestElevations = null;
 
@@ -365,19 +367,18 @@ public class StatesAndCapitals
 
     private double latLongDist(double lat1, double lng1, double lat2, double lng2) {
         double earthRadius = 6371000; //meters
-        double dLat = Math.toRadians(lat2-lat1);
-        double dLng = Math.toRadians(lng2-lng1);
-        double a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+        double dLat = Math.toRadians(lat2 - lat1);
+        double dLng = Math.toRadians(lng2 - lng1);
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
                 Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
-                        Math.sin(dLng/2) * Math.sin(dLng/2);
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+                        Math.sin(dLng / 2) * Math.sin(dLng / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         double dist = (earthRadius * c);
 
         return dist;
     }
 
-    private void mapAndFlatMapExample()
-    {
+    private void mapAndFlatMapExample() {
         List<String> singlyNestedList =
                 Arrays.asList("a", "b");
 
@@ -408,18 +409,15 @@ public class StatesAndCapitals
         System.out.println(singlyNestedList);
         System.out.println("Doubly-nested list: ");
         System.out.println("[");
-        for (List<String> innerList : doublyNestedList)
-        {
+        for (List<String> innerList : doublyNestedList) {
             System.out.println("    " + innerList);
         }
         System.out.println("]");
         System.out.println("Triply-nested list: ");
         System.out.println("[");
-        for (List<List<String>> innerList : triplyNestedList)
-        {
+        for (List<List<String>> innerList : triplyNestedList) {
             System.out.println("    [");
-            for (List<String> innerInnerList : innerList)
-            {
+            for (List<String> innerInnerList : innerList) {
                 System.out.println("        " + innerInnerList);
             }
             System.out.println("    ]");
