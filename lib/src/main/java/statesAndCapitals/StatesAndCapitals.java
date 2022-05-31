@@ -336,8 +336,28 @@ public class StatesAndCapitals {
 //        );
 
 
+        Map<String, Map<String, Integer>> innerMap = states.stream().collect(Collectors.toMap(state -> state.getStateName() + " " + state.getHighestElevationInFeet(),
+                state -> state.getNeighboringStates().stream()
+                        .collect(toMap(
+                                neighborName -> neighborName , neighborName ->
+                                {
+                                    Optional<StateInfo> test = states.stream().filter(
+                                            d -> Objects.equals(d.getStateName(), neighborName)
+                                    ).findFirst();
+                                    if (test.isEmpty()) {
+                                        return MAX_VALUE;
+                                    } else {
+                                        return test.get().getHighestElevationInFeet();
+                                    }
+                                }
+
+                        )
+                        )
+        ));
+
+
         System.out.println("================================================================================================");
-//        System.out.println(innerMap);
+        System.out.println(innerMap);
         System.out.println("================================================================================================");
 
 
